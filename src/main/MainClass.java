@@ -4,13 +4,14 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import dao.StudentDAO;
-import util.FileClass;
+import util.FileIO;
 
 public class MainClass {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 		StudentDAO dao = new StudentDAO();
-		FileClass fileClass = new FileClass();
+		FileIO fileio = new FileIO("student");
+		fileio.create();
 		
 		while (true) {
 			System.out.println();
@@ -59,7 +60,7 @@ public class MainClass {
 				dao.allData();
 				break;
 			case 6: //학생정보 모두출력
-				fileClass.writeFile(dao.dtoSelect());
+				fileio.writeFile(dao.dtoSelect());
 				break;
 			case 7:
 				System.out.println("기존의 데이터가 날아갈 수 있습니다. 계속하시겠습니까? (0입력시 취소)");
@@ -67,7 +68,7 @@ public class MainClass {
 				if(flag == '0') {
 					break;
 				}else {
-					dao.dtoUpdate(fileClass.readFile());
+					dao.dtoUpdate(fileio.readFile());
 					dao.allData();
 					break;
 				}
@@ -87,6 +88,7 @@ public class MainClass {
 						
 					case '3':
 						dao.selectAllScore();
+						break;
 					default:
 						System.out.println("잘못입력하셨습니다. 다시입력해주세요.");
 						break;

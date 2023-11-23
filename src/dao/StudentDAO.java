@@ -1,9 +1,11 @@
 package dao;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import dto.ScoreDTO;
 import dto.StudentDTO;
 import util.UtilClass;
 
@@ -173,8 +175,17 @@ public class StudentDAO {
 	//file----------------------------------------------------------
 	
 	//파일 저장용
-	public StudentDTO[] dtoSelect() {
-		return studenDtos;
+	public String[] dtoSelect() {
+		String str[] = new String[count];
+		
+		int i=0;
+		for(StudentDTO dto : studenDtos) {
+			if(dto != null && !dto.getName().isBlank()) {
+				str[i] = dto.toString();
+				i++;
+			}
+		}
+		return str;
 	}
 	
 	//파일 불러오기용
@@ -220,9 +231,30 @@ public class StudentDAO {
 		System.out.println("평균별 학생 등수 ==========");
 		System.out.println();
 		
-		int rankingIndex[] = {0,1,2,3,4,5,6,7,8,9};
-		double highest = utils.avgScore(studenDtos[0]);
-		for(int i=1; i<studenDtos.length ; i++) {
+		ScoreDTO scoreDTOs[] = new ScoreDTO[count];
+		
+		for(int i = 0 ; i< studenDtos.length; i++) {
+			if(studenDtos[i] != null) {
+				scoreDTOs[i] = new ScoreDTO();
+				scoreDTOs[i].setName(studenDtos[i].getName());
+				scoreDTOs[i].setSum(utils.sumScore(studenDtos[i]));
+				scoreDTOs[i].setAvg(utils.avgScore(studenDtos[i]));
+			}
+		}
+		
+		Arrays.sort(scoreDTOs, new Comparator<ScoreDTO>() {
+            @Override
+            public int compare(ScoreDTO s1, ScoreDTO s2) {
+                double avg1 = s1.getAvg();
+                double avg2 = s2.getAvg();
+
+             // 평균값을 기준으로 내림차순 정렬
+                return Double.compare(avg2, avg1);
+            }
+        });
+		
+		for(int i = 0; i<scoreDTOs.length;i++) {
+			System.out.println((i+1)+"등 "+scoreDTOs[i].toString());
 		}
 	}
 	
