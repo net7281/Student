@@ -10,19 +10,38 @@ import java.io.PrintWriter;
 
 import dto.StudentDTO;
 
-public class FileClass {
+public class FileIO {
+	
+	
+	private String fileName;
+	private File file;
+	
+	public FileIO(String fileName) {
+		this.fileName = fileName;
+		file = new File( "C:\\tmp\\" + fileName+".txt");
+	}
+	
+	//파일 생성
+	public void create() {
+		try {
+			if(file.createNewFile()) {
+				System.out.println("파일 생성 성공");
+			}else {
+				System.out.println("파일 생성 실패");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	//파일 저장
-	public void writeFile(StudentDTO studenDtos[]) {
-		String fileName = "학생기록부";
-		File file = new File( "C:\\tmp\\" + fileName+".txt");
+	public void writeFile(String strArr[]) {
+		
 		try {
 			PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
 			
-			for(StudentDTO dto : studenDtos) {
-				if(dto != null && !dto.getName().isBlank()) {
-					pw.println(dto.toString());
-				}
+			for(String str : strArr) {
+				pw.println(str);
 			}
 			pw.close();
 			System.out.println("파일을 출력하였습니다.");
@@ -35,8 +54,6 @@ public class FileClass {
 	
 	//파일불러오기
 	public StudentDTO[] readFile() {
-		String fileName = "학생기록부";
-		File file = new File( "C:\\tmp\\" + fileName+".txt");
 		
 		StudentDTO studenDtos[] = new StudentDTO[10];
 		
